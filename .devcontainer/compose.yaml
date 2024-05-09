@@ -1,0 +1,51 @@
+# https://docs.docker.com/compose/compose-file/
+
+services:
+    # db:
+    #   image: postgres:latest
+    #   environment:
+    #     - "POSTGRES_USER=postgres"
+    #     - "POSTGRES_PASSWORD=mysecretpassword1234"
+    #   ports:
+    #     - "5432:5432"
+
+    # redis:
+    #   image: redis:latest
+    #   ports:
+    #     - "6379:6379"
+
+    web:
+        image: vscode-remote-try-python_devcontainer
+        container_name: vscode-remote-try-python_devcontainer
+        stdin_open: true
+        tty: true
+
+        build:
+            context: .
+            dockerfile: Dockerfile
+            target: develop
+
+        # environment:
+        #   - "DATABASE_HOST=db"
+        #   - "DATABASE_PORT=5432"
+        #   - "DATABASE_USER=postgres"
+        #   - "DATABASE_PASSWORD=mysecretpassword1234"
+        #   - "REDIS_URL=redis://redis:6379"
+
+        # links:
+        #   - db
+        #   - redis
+
+        logging:
+            driver: json-file
+            options:
+                max-file: 1
+                max-size: 3m
+
+        ports:
+            - 3000:80
+
+        volumes:
+            - type: bind
+              source: ../apps
+              target: /tmp/apps
